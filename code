@@ -1,0 +1,64 @@
+#include <bits/stdc++.h>
+using namespace std;
+int output(vector<int> &input,int* out,int size)
+{
+    if(size == 1 || size == 0)
+    {
+        return 1;
+    }
+    if(out[size]>0)
+    {
+        return out[size];
+    }
+    int res = 0;
+    if(input[size-1] !=0)
+    {
+        res = output(input,out,size-1);
+    }
+    if( (input[size-2]*10 + input[size-1] <=26) && input[size-2] >0)
+    {
+        res+= output(input,out,size-2);
+    }
+    out[size] = res;
+    return res;
+}
+int output_i(vector<int> &input,int* out,int size)
+{
+    out[0] = 1;
+    out[1] = 1;
+    int m = pow(10,9)+7;
+    for(int i = 2;i<=size;i++)
+    {
+        if(input[i-1] != 0)
+        {
+        	out[i] = out[i-1]%m;
+        }
+        if((input[i-2]*10 + input[i-1] <=26) && input[i-2] >0)
+        {
+            out[i] = (out[i]+out[i-2])%m;
+        }
+    }
+    int ans = out[size]%m;
+    return ans;
+}
+int main()
+{
+    string n;
+    cin>>n;
+    
+    while(n != "0")
+    {
+        vector<int> input;
+        int s = n.size();
+        for(int i=0;i<s;i++)
+        {
+            input.push_back(n[i]-'0');
+        }
+        int* out = new int[input.size() + 1]();
+        int ans = output_i(input,out,input.size());
+        delete[] out;
+        cout<<ans<<endl;
+        cin>>n;      
+    }
+    return 0;
+}
